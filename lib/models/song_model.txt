@@ -1,0 +1,23 @@
+-----------------------------------
+SongDetailed:
+  final String type;
+  final String videoId;
+  final String name;
+  final ArtistBasic artist;
+  final AlbumBasic? album;
+  final int? duration;
+  final List<ThumbnailFull> thumbnails;
+-----------------------------------
+ArtistBasic:
+  final String? artistId;
+  final String name;
+-----------------------------------
+AlbumBasic:
+  final String albumId;
+  final String name;
+-----------------------------------
+ThumbnailFull:
+  final String url;
+  final int width;
+  final int height;
+----------------------------------
