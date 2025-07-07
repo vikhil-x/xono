@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:dart_ytmusic_api/types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:xono/providers.dart';
-import 'searchItemTiles.dart';
+import 'search_item.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
+  const SearchPage({super.key});
   @override
   ConsumerState<SearchPage> createState() => _SearchPageState();
 }

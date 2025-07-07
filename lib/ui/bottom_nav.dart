@@ -20,7 +20,7 @@ class BottomNav extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 child: SizedBox(
                   height: 200,
-                  child: MusicPlayer(),
+                  child: ref.read(currentlyPlayingProvider) !=null? MusicPlayer(): MusicPlayerShimmer(),
                 ),
               );
             },

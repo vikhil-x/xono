@@ -1,6 +1,5 @@
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xono/core/yt_scrape.dart';
 import '../providers.dart';
 
 class PlayerControl {

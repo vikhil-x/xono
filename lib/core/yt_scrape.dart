@@ -1,6 +1,6 @@
 import 'package:dart_ytmusic_api/dart_ytmusic_api.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'dart:developer';
+
 class Scraper{
   late YoutubeExplode explode;
   late YTMusic ytMusic;

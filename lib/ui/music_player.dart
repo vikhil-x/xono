@@ -1,7 +1,9 @@
+import 'package:dart_ytmusic_api/dart_ytmusic_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:xono/providers.dart';
 import '../tools/player_control.dart';
+export 'music_player_shimmer.dart';
 
 class MusicPlayer extends ConsumerStatefulWidget {
   const MusicPlayer({super.key});
@@ -22,6 +24,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
   @override
   Widget build(BuildContext context) {
     final isPaused = ref.watch(pauseProvider);
+    final SongDetailed? song = ref.watch(currentlyPlayingProvider);
 
     return SizedBox(
       width: 350,
@@ -37,12 +40,14 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
               padding: EdgeInsets.all(8),
               child: Row(
                 children: [
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black,
+                  ClipOval(
+                    child: Image.network(
+                      song!.thumbnails.last.url,
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Container(width: 120, height: 120, color: Colors.black),
                     ),
                   ),
                   Expanded(
@@ -51,14 +56,18 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                       child: Column(
                         children: [
                           Text(
-                            'All the Stars',
+                            song.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: 'san francisco',
                             ),
                           ),
                           Text(
-                            'Sia, Kendric Lamar',
+                            song.artist.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                           SizedBox(height: 20),

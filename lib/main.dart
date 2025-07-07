@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'ui/music_player.dart';
 import 'ui/bottom_nav.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'ui/search_page.dart';
@@ -68,7 +67,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String name = 'Arc';
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -83,7 +81,7 @@ class MyHomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: SearchPage(),
+        child: const SearchPage(),
       ),
       bottomNavigationBar: BottomNav(),
     );
