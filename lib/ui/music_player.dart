@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:xono/providers.dart';
 import '../tools/player_control.dart';
+import 'package:just_audio/just_audio.dart';
+
 export 'music_player_shimmer.dart';
 
 class MusicPlayer extends ConsumerStatefulWidget {
@@ -23,8 +25,15 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    final isPaused = ref.watch(pauseProvider);
     final SongDetailed? song = ref.watch(currentlyPlayingProvider);
+    final isPlaying = ref.watch(playerStateProvider).when(
+      data: (state) =>
+      state.playing && state.processingState != ProcessingState.completed,
+      loading: () => false,
+      error: (e, st) => false,
+    );
+    final progressAsync = ref.watch(progressProvider);
+    final progress = progressAsync.asData?.value ?? 0.0;
 
     return SizedBox(
       width: 350,
@@ -74,8 +83,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                           FractionallySizedBox(
                             widthFactor: 0.9,
                             child: LinearProgressIndicator(
-                              value: 0.5,
-                              backgroundColor: Colors.grey,
+                              value: isPlaying? progress.clamp(0.0,1.0): 0.0,
                               borderRadius: BorderRadiusGeometry.circular(16),
                             ),
                           ),
@@ -85,29 +93,26 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                               IconButton(
                                 icon: Icon(Icons.skip_previous),
                                 onPressed: () {
-                                  ref.read(pauseProvider.notifier).state = false;
                                   controller.playPrev();
                                 },
                                 iconSize: 30,
                               ),
                               IconButton(
-                                icon: isPaused
-                                    ? Icon(Icons.play_arrow)
-                                    : Icon(Icons.pause),
+                                icon: isPlaying
+                                    ? Icon(Icons.pause)
+                                    : Icon(Icons.play_arrow),
                                 onPressed: () {
-                                  if (isPaused) {
-                                    controller.play();
-                                  } else {
+                                  if (isPlaying) {
                                     controller.pause();
+                                  } else {
+                                    controller.play();
                                   }
-                                  ref.read(pauseProvider.notifier).state = !isPaused;
                                 },
                                 iconSize: 30,
                               ),
                               IconButton(
                                 icon: Icon(Icons.skip_next),
                                 onPressed: () {
-                                  ref.read(pauseProvider.notifier).state = false;
                                   controller.playNext();
                                 },
                                 iconSize: 30,
