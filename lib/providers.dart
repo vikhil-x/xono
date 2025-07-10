@@ -22,7 +22,6 @@ final ytScraperProvider = FutureProvider<Scraper>((ref) async{
   return scraper;
 });
 
-final currentlyPlayingProvider = StateProvider<SongDetailed?>((ref) => null);
 final playerStateProvider = StreamProvider<PlayerState>((ref) {
   final audioPlayer = ref.watch(audioPlayerProvider);
   return audioPlayer.playerStateStream;
@@ -39,4 +38,15 @@ final progressProvider = StreamProvider<double>((ref) async*{
       yield 0.0;
     }
   }
+});
+
+final currentSongProvider = StreamProvider<SongDetailed?>((ref) {
+  final player = ref.watch(audioPlayerProvider);
+  return player.sequenceStateStream.map((seqState) {
+    final source = seqState?.currentSource;
+    if (source?.tag is SongDetailed) {
+      return source!.tag as SongDetailed;
+    }
+    return null;
+  });
 });

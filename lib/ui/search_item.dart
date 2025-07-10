@@ -31,10 +31,7 @@ class SearchItemTile extends ConsumerWidget {
         overflow: TextOverflow.ellipsis,
       ),
       onTap: () async {
-        ref.read(currentlyPlayingProvider.notifier).state = song;
-        final scraper = await ref.read(ytScraperProvider.future);
-        final uri = await scraper.getUri(song.videoId);
-        await ref.read(playerControlProvider).play(uri);
+        await ref.read(playerControlProvider).play(song);
       },
     );
   }

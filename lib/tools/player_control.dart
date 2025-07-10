@@ -1,3 +1,4 @@
+import 'package:dart_ytmusic_api/dart_ytmusic_api.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers.dart';
@@ -24,14 +25,17 @@ class PlayerControl {
   }
 
   Future<void> _play(String fileName) async {
-    await player.setAudioSource(AudioSource.asset('assets/music_files/$fileName'));
+    await player.setAudioSource(
+      AudioSource.asset('assets/music_files/$fileName'),
+    );
     await player.play();
   }
 
-  Future<void> play([Uri? url]) async {
-    if (url != null) {
-      await player.stop();
-      await player.setAudioSource(AudioSource.uri(url));
+  Future<void> play([SongDetailed? song]) async {
+    if (song != null) {
+      final scraper = await ref.read(ytScraperProvider.future);
+      final url = await scraper.getUri(song.videoId);
+      await player.setAudioSource(AudioSource.uri(url, tag: song));
     }
     await player.play();
   }
