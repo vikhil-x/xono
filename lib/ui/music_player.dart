@@ -85,13 +85,27 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                               style: TextStyle(
                                   color: Colors.grey, fontSize: 12),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 14),
                             FractionallySizedBox(
                               widthFactor: 0.9,
-                              child: LinearProgressIndicator(
-                                value: progress.clamp(0.0, 1.0),
-                                borderRadius: BorderRadiusGeometry.circular(16),
-                              ),
+                              child: SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  trackHeight: 4,
+                                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6), // smaller thumb
+                                  overlayShape: RoundSliderOverlayShape(overlayRadius: 0), // remove halo
+                                  //activeTrackColor: Colors.deepPurpleAccent,
+                                  //inactiveTrackColor: Colors.deepPurpleAccent.withOpacity(0.3),
+                                ),
+                                child: Slider(
+                                  value: progress.clamp(0.0,1.0),
+                                  onChanged: (newValue) {
+                                    final duration = ref.read(audioPlayerProvider).duration;
+                                    if (duration != null) {
+                                      ref.read(audioPlayerProvider).seek(duration * newValue);
+                                    }
+                                  },
+                                ),
+                              )
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

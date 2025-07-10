@@ -17,7 +17,7 @@ class MusicPlayerShimmer extends StatelessWidget {
             ),
             elevation: 3,
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
                   Shimmer.fromColors(
@@ -43,12 +43,12 @@ class MusicPlayerShimmer extends StatelessWidget {
                             Container(
                               height: 15,
                               width: 150,
-                              //margin: const EdgeInsets.symmetric(vertical: 4),
                               decoration: BoxDecoration(
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
+                            const SizedBox(height: 8),
                             Container(
                               height: 8,
                               width: 100,
@@ -58,13 +58,16 @@ class MusicPlayerShimmer extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 19),
                             FractionallySizedBox(
                               widthFactor: 0.9,
-                              child: LinearProgressIndicator(
-                                value: 0.5,
-                                backgroundColor: Colors.grey,
-                                borderRadius: BorderRadiusGeometry.circular(16),
+                              child: SizedBox(
+                                height: 6,
+                                child: LinearProgressIndicator(
+                                  value: 0.5,
+                                  backgroundColor: Colors.grey,
+                                  borderRadius: BorderRadiusGeometry.circular(16),
+                                ),
                               ),
                             ),
                             Row(
@@ -72,30 +75,17 @@ class MusicPlayerShimmer extends StatelessWidget {
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.skip_previous),
-                                  onPressed: () {
-                                    /*ref.read(pauseProvider.notifier).state = false;
-                                  controller.playPrev();*/
-                                  },
+                                  onPressed: () {},
                                   iconSize: 30,
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.play_arrow),
-                                  onPressed: () {
-                                    /*if (isPaused) {
-                                    controller.play();
-                                  } else {
-                                    controller.pause();
-                                  }
-                                  ref.read(pauseProvider.notifier).state = !isPaused;*/
-                                  },
+                                  onPressed: () {},
                                   iconSize: 30,
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.skip_next),
-                                  onPressed: () {
-                                    /*ref.read(pauseProvider.notifier).state = false;
-                                  controller.playNext();*/
-                                  },
+                                  onPressed: () {},
                                   iconSize: 30,
                                 ),
                               ],
