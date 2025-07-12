@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:xono/tools/player_control.dart';
 import 'core/music_db.dart';
 import 'package:just_audio/just_audio.dart';
-import 'core/yt_scrape.dart';
+import 'tools/yt_scrape.dart';
 import 'package:dart_ytmusic_api/types.dart';
 
 final bottomIndexProvider = StateProvider<int>((ref) => 1);
@@ -15,8 +15,10 @@ final audioPlayerProvider = Provider<AudioPlayer>((ref) {
   return player;
 });
 
-final playerControlProvider = Provider<PlayerControl>((ref) => PlayerControl(ref));
-final ytScraperProvider = FutureProvider<Scraper>((ref) async{
+final playerControlProvider = Provider<PlayerControl>(
+  (ref) => PlayerControl(ref),
+);
+final ytScraperProvider = FutureProvider<Scraper>((ref) async {
   final scraper = Scraper();
   await scraper.initialize();
   return scraper;
@@ -27,14 +29,13 @@ final playerStateProvider = StreamProvider<PlayerState>((ref) {
   return audioPlayer.playerStateStream;
 });
 
-final progressProvider = StreamProvider<double>((ref) async*{
+final progressProvider = StreamProvider<double>((ref) async* {
   final audioPlayer = ref.watch(audioPlayerProvider);
-  await for(final pos in audioPlayer.positionStream){
+  await for (final pos in audioPlayer.positionStream) {
     final duration = audioPlayer.duration;
-    if(duration!=null && duration.inMilliseconds>0){
+    if (duration != null && duration.inMilliseconds > 0) {
       yield pos.inMilliseconds / duration.inMilliseconds;
-    }
-    else{
+    } else {
       yield 0.0;
     }
   }
@@ -49,4 +50,12 @@ final currentSongProvider = StreamProvider<SongDetailed?>((ref) {
     }
     return null;
   });
+});
+
+final relatedSongsProvider = FutureProvider<List<SongDetailed>>((ref) async {
+  final scraper = await ref.watch(ytScraperProvider.future);
+  final currentSongAsync = ref.watch(currentSongProvider);
+  final currentSong = currentSongAsync.asData?.value;
+  if (currentSong == null) return [];
+  return await scraper.getRelatedSongs(currentSong);
 });

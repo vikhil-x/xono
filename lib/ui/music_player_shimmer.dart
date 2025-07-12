@@ -66,7 +66,9 @@ class MusicPlayerShimmer extends StatelessWidget {
                                 child: LinearProgressIndicator(
                                   value: 0.5,
                                   backgroundColor: Colors.grey,
-                                  borderRadius: BorderRadiusGeometry.circular(16),
+                                  borderRadius: BorderRadiusGeometry.circular(
+                                    16,
+                                  ),
                                 ),
                               ),
                             ),
@@ -107,6 +109,22 @@ class MusicPlayerShimmer extends StatelessWidget {
                 FilledButton(
                   onPressed: () {},
                   child: Icon(Icons.all_inclusive),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return SizedBox(
+                          height: 25,
+                          child: Center(
+                            child: Text('No songs in queue'),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Text('Queue'),
                 ),
                 FilledButton(
                   onPressed: () {},
