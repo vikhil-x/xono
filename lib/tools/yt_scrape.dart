@@ -5,7 +5,7 @@ class Scraper {
   late YoutubeExplode explode;
   late YTMusic ytMusic;
 
-  initialize() async {
+  Future<void> initialize() async {
     explode = YoutubeExplode();
     ytMusic = YTMusic();
     await ytMusic.initialize();
