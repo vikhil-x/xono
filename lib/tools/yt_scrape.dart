@@ -23,30 +23,7 @@ class Scraper {
   }
 
   Future<List<SongDetailed>> getRelatedSongs(SongDetailed song) async {
-    final data = await ytMusic.constructRequest("next", body: {"videoId": song.videoId});
-    //Navigating deeply through youtube JSON request
-    final items = traverseList(data, [
-      "contents",
-      "singleColumnMusicWatchNextResultsRenderer",
-      "tabbedRenderer",
-      "watchNextTabbedResultsRenderer",
-      "tabs",
-      "0",
-      "tabRenderer",
-      "content",
-      "musicQueueRenderer",
-      "content",
-      "playlistPanelRenderer",
-      "contents",
-    ]);
-
-    final related = <SongDetailed>[];
-
-    for (final item in items) {
-      final parsed = SongParser.parseSearchResult(item);
-      related.add(parsed);
-    }
-
-    return related;
+    final artistSongs = await ytMusic.getArtistSongs(song.artist.artistId ?? '');
+    return artistSongs;
   }
 }

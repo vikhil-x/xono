@@ -11,7 +11,7 @@ class QueuedSongsPage extends ConsumerWidget {
     final relatedSongsAsync = ref.watch(relatedSongsProvider);
 
     return Padding(
-        padding: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
         child: relatedSongsAsync.when(
           loading: () => ListView.builder(
             itemCount: 10,
