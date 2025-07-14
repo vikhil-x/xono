@@ -24,6 +24,7 @@ class Scraper {
 
   Future<List<SongDetailed>> getRelatedSongs(SongDetailed song) async {
     final artistSongs = await ytMusic.getArtistSongs(song.artist.artistId ?? '');
-    return artistSongs;
+    artistSongs.removeWhere((s) => s.videoId == song.videoId);
+    return artistSongs.take(10).toList();
   }
 }

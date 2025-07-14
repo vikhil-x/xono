@@ -160,7 +160,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                   FilledButton(
                     onPressed: (){
                       showModalBottomSheet(context: context,
-                          builder: (context) => QueuedSongsPage()
+                          builder: (context) => const QueuedSongsPage()
                       );
                     },
                     child: Text('Queue'),

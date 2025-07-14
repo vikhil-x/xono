@@ -6,8 +6,9 @@ export 'search_item_shimmer.dart';
 
 class SearchItemTile extends ConsumerWidget {
   final SongDetailed song;
+  final bool resetQueue;
 
-  const SearchItemTile({super.key, required this.song});
+  const SearchItemTile({super.key, required this.song, required this.resetQueue});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +24,6 @@ class SearchItemTile extends ConsumerWidget {
           ),
         ),
       ),
-      //trailing: Text((song.duration ?? '').toString()),
       title: Text(song.name, maxLines: 1, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         song.artist.name,
@@ -31,7 +31,7 @@ class SearchItemTile extends ConsumerWidget {
         overflow: TextOverflow.ellipsis,
       ),
       onTap: () async {
-        await ref.read(playerControlProvider).play(song);
+        await ref.read(playerControlProvider).play(song,resetQueue);
       },
     );
   }

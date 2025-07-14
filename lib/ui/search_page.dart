@@ -54,7 +54,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   : ListView.builder(
                       itemCount: listOfSongs.length,
                       itemBuilder: (context, index) =>
-                          SearchItemTile(song: listOfSongs[index]),
+                          SearchItemTile(song: listOfSongs[index], resetQueue: true),
                       physics: const BouncingScrollPhysics(),
                     ),
             ),

@@ -1,13 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:xono/tools/player_control.dart';
-import 'core/music_db.dart';
 import 'package:just_audio/just_audio.dart';
 import 'tools/yt_scrape.dart';
 import 'package:dart_ytmusic_api/types.dart';
 
 final bottomIndexProvider = StateProvider<int>((ref) => 1);
-
-final musicProvider = StateProvider<List<String>>((ref) => musicList);
 
 final audioPlayerProvider = Provider<AudioPlayer>((ref) {
   final player = AudioPlayer();
@@ -52,10 +49,9 @@ final currentSongProvider = StreamProvider<SongDetailed?>((ref) {
   });
 });
 
-final relatedSongsProvider = FutureProvider<List<SongDetailed>>((ref) async {
+final relatedSongsProvider = FutureProvider.family<List<SongDetailed>, SongDetailed>((ref, song) async {
   final scraper = await ref.watch(ytScraperProvider.future);
-  final currentSongAsync = ref.watch(currentSongProvider);
-  final currentSong = currentSongAsync.asData?.value;
-  if (currentSong == null) return [];
-  return await scraper.getRelatedSongs(currentSong);
+  return await scraper.getRelatedSongs(song);
 });
+
+final playlistProvider = StateProvider<List<SongDetailed>>((ref) => []);

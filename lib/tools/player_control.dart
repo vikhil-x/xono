@@ -11,31 +11,28 @@ class PlayerControl {
   PlayerControl(this.ref) : player = ref.read(audioPlayerProvider);
 
   Future<void> playNext() async {
-    player.stop();
-    final musicList = ref.read(musicProvider);
+    final musicList = ref.read(playlistProvider);
     index = (index + 1) % musicList.length;
-    await _play(musicList[index]);
+    await play(musicList[index]);
   }
 
   Future<void> playPrev() async {
-    player.stop();
-    final musicList = ref.read(musicProvider);
+    final musicList = ref.read(playlistProvider);
     index = (index - 1 + musicList.length) % musicList.length;
-    await _play(musicList[index]);
+    await play(musicList[index]);
   }
 
-  Future<void> _play(String fileName) async {
-    await player.setAudioSource(
-      AudioSource.asset('assets/music_files/$fileName'),
-    );
-    await player.play();
-  }
-
-  Future<void> play([SongDetailed? song]) async {
+  Future<void> play([SongDetailed? song, bool? resetQueue]) async {
     if (song != null) {
       final scraper = await ref.read(ytScraperProvider.future);
       final url = await scraper.getUri(song.videoId);
       await player.setAudioSource(AudioSource.uri(url, tag: song));
+
+      if(resetQueue ?? false){
+        index = 0;
+        final relatedSongs = await ref.watch(relatedSongsProvider(song).future);
+        ref.read(playlistProvider.notifier).state = [song,...relatedSongs];
+      }
     }
     await player.play();
   }
