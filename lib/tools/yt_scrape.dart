@@ -1,6 +1,7 @@
 import 'package:dart_ytmusic_api/dart_ytmusic_api.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+
 class Scraper {
   late YoutubeExplode explode;
   late YTMusic ytMusic;
@@ -27,4 +28,6 @@ class Scraper {
     artistSongs.removeWhere((s) => s.videoId == song.videoId);
     return artistSongs.take(10).toList();
   }
+
+
 }

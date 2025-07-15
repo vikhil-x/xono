@@ -46,6 +46,8 @@ dependencies:
   dart_ytmusic_api: ^1.2.1
   youtube_explode_dart: ^2.5.1
   shimmer: ^3.0.0
+  go_router: ^16.0.0
+  http: ^1.4.0
 
 dev_dependencies:
   flutter_test:

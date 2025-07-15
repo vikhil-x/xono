@@ -38,6 +38,11 @@ final progressProvider = StreamProvider<double>((ref) async* {
   }
 });
 
+final positionProvider = StreamProvider<Duration>((ref) {
+  final audioPlayer = ref.watch(audioPlayerProvider);
+  return audioPlayer.positionStream;
+});
+
 final currentSongProvider = StreamProvider<SongDetailed?>((ref) {
   final player = ref.watch(audioPlayerProvider);
   return player.sequenceStateStream.map((seqState) {
