@@ -27,6 +27,7 @@ class PlayerControl {
       final scraper = await ref.read(ytScraperProvider.future);
       final url = await scraper.getUri(song.videoId);
       await player.setAudioSource(AudioSource.uri(url, tag: song));
+      await player.play();
 
       if(resetQueue ?? false){
         index = 0;
@@ -34,7 +35,9 @@ class PlayerControl {
         ref.read(playlistProvider.notifier).state = [song,...relatedSongs];
       }
     }
-    await player.play();
+    else{
+      await player.play();
+    }
   }
 
   void pause() async => await player.pause();
