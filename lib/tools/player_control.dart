@@ -30,8 +30,9 @@ class PlayerControl {
       await player.play();
 
       if(resetQueue ?? false){
+        ref.read(playlistProvider.notifier).state = [];
         index = 0;
-        final relatedSongs = await ref.watch(relatedSongsProvider(song).future);
+        final relatedSongs = await scraper.getRelatedSongs(song);
         ref.read(playlistProvider.notifier).state = [song,...relatedSongs];
       }
     }

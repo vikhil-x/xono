@@ -54,9 +54,4 @@ final currentSongProvider = StreamProvider<SongDetailed?>((ref) {
   });
 });
 
-final relatedSongsProvider = FutureProvider.family<List<SongDetailed>, SongDetailed>((ref, song) async {
-  final scraper = await ref.watch(ytScraperProvider.future);
-  return await scraper.getRelatedSongs(song);
-});
-
 final playlistProvider = StateProvider<List<SongDetailed>>((ref) => []);

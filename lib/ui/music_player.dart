@@ -5,6 +5,7 @@ import 'package:xono/ui/queued_songs_page.dart';
 import '../tools/player_control.dart';
 import 'package:just_audio/just_audio.dart';
 import 'music_player_shimmer.dart';
+import 'dart:async';
 
 export 'music_player_shimmer.dart';
 
@@ -17,6 +18,18 @@ class MusicPlayer extends ConsumerStatefulWidget {
 
 class _MusicPlayerState extends ConsumerState<MusicPlayer> {
   late final PlayerControl controller;
+  late final StreamSubscription<PlayerState> _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    final player = ref.read(audioPlayerProvider);
+    _subscription = player.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        controller.playNext();
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
