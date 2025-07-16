@@ -32,6 +32,12 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
   }
 
   @override
+  void dispose(){
+    _subscription.cancel();
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     controller = ref.read(playerControlProvider);
