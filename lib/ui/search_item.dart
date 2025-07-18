@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:xono/ui/visualizer.dart';
 import '../providers.dart';
+import 'package:just_audio/just_audio.dart';
+
 export 'search_item_shimmer.dart';
 
 class SearchItemTile extends ConsumerWidget {
@@ -17,6 +19,13 @@ class SearchItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isPlaying = ref.watch(playerStateProvider).when(
+      data: (state) =>
+      state.playing && state.processingState != ProcessingState.completed,
+      loading: () => false,
+      error: (e, st) => false,
+    );
+
     return ListTile(
       leading: Container(
         width: 50,
@@ -30,7 +39,7 @@ class SearchItemTile extends ConsumerWidget {
         ),
       ),
       trailing:
-          ref.watch(currentSongProvider).asData?.value?.videoId == song.videoId
+      (ref.watch(currentSongProvider).asData?.value?.videoId == song.videoId) && isPlaying
           ? SizedBox(width: 30, height: 20, child: MusicVisualizer())
           : null,
       title: Text(song.name, maxLines: 1, overflow: TextOverflow.ellipsis),

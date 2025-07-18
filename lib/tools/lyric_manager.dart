@@ -2,21 +2,19 @@ import 'package:http/http.dart' as http;
 import 'package:dart_ytmusic_api/types.dart';
 import 'dart:convert';
 
-Future<String> getSyncedLyrics(SongDetailed song) async {
-  final response = await getResponse(song);
+Future<String> getSyncedLyrics(SongDetailed song, String duration) async {
+  final response = await getResponse(song, duration);
 
-  if(response.statusCode == 200){
+  if (response.statusCode == 200) {
     final decoded = jsonDecode(response.body);
     final lyrics = decoded["syncedLyrics"];
     return lyrics as String;
   }
-  return "";
+  return getPlainLyrics(song, response);
 }
 
-Future<String> getPlainLyrics(SongDetailed song) async {
-  final response = await getResponse(song);
-
-  if(response.statusCode == 200){
+Future<String> getPlainLyrics(SongDetailed song, http.Response response) async {
+  if (response.statusCode == 200) {
     final decoded = jsonDecode(response.body);
     final lyrics = decoded["plainLyrics"];
     return lyrics as String;
@@ -24,31 +22,32 @@ Future<String> getPlainLyrics(SongDetailed song) async {
   return "";
 }
 
-Future<http.Response> getResponse(SongDetailed song) async {
-  final response = await http.get(Uri.parse('https://lrclib.net/api/get?'), headers: {
-    "artist_name": Uri.encodeComponent(song.artist.name),
-    "track_name": Uri.encodeComponent(song.name),
-    "album_name": Uri.encodeComponent(song.album?.name ?? ""),
-    "duration": Uri.encodeComponent(song.duration.toString()),
+Future<http.Response> getResponse(SongDetailed song, String duration) async {
+  final uri = Uri.https('lrclib.net', '/api/get', {
+    "artist_name": song.artist.name,
+    "track_name": song.name,
+    "album_name": song.album?.name ?? "",
+    "duration": duration,
   });
+  final response = await http.get(uri);
   return response;
 }
 
-class LyricLine{
+class LyricLine {
   final String text;
   final Duration timeStamp;
   LyricLine(this.text, this.timeStamp);
 }
 
-List<LyricLine> getLyricLines(String lyrics){
-  if(lyrics.isEmpty) return [];
+List<LyricLine> getLyricLines(String lyrics) {
+  if (lyrics.isEmpty) return [];
 
   final regex = RegExp(r'\[(\d{2}):(\d{2}\.\d{2})\](.*)');
   final lines = <LyricLine>[];
 
-  for(final line in lyrics.split('\n')){
+  for (final line in lyrics.split('\n')) {
     final match = regex.firstMatch(line);
-    if(match != null){
+    if (match != null) {
       final minutes = int.parse(match.group(1)!);
       final seconds = double.parse(match.group(2)!);
       final millis = ((minutes * 60 + seconds) * 1000).round();

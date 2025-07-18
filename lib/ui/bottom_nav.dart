@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:xono/ui/lyric_widget.dart';
 import 'package:xono/ui/music_player.dart';
 import '../providers.dart';
 import 'dart:ui';
@@ -9,18 +10,34 @@ class BottomNav extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final songAsync = ref.watch(currentSongProvider);
+
     return BottomNavigationBar(
       currentIndex: ref.watch(bottomIndexProvider),
       onTap: (index) {
         ref.read(bottomIndexProvider.notifier).state = index;
         if (index == 1) {
           showModalBottomSheet(
+            isScrollControlled: true,
             backgroundColor: Colors.transparent,
             context: context,
             builder: (context) {
               return BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: MusicPlayer(),
+                child: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        songAsync.maybeWhen(
+                          data: (song) => LyricWidget(song: song!),
+                          orElse: () => const SizedBox.shrink(),
+                        ),
+                        const MusicPlayer(),
+                      ],
+                    ),
+                  ),
+                ),
               );
             },
           );
