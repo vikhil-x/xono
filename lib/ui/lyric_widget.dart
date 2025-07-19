@@ -52,7 +52,7 @@ class _LyricWidgetDisplayState extends ConsumerState<_LyricWidgetDisplay> {
   final _scrollController = ScrollController();
   int _currentIndex = 0;
 
-  static const double _lineHeight = 40;
+  static const double _lineHeight = 50;
   static const double _widgetHeight = _lineHeight * 3;
 
   @override
