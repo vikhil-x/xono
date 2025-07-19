@@ -12,12 +12,14 @@ class PlayerControl {
 
   Future<void> playNext() async {
     final musicList = ref.read(playlistProvider);
+    if (musicList.isEmpty) return;
     index = (index + 1) % musicList.length;
     await play(musicList[index]);
   }
 
   Future<void> playPrev() async {
     final musicList = ref.read(playlistProvider);
+    if (musicList.isEmpty) return;
     index = (index - 1 + musicList.length) % musicList.length;
     await play(musicList[index]);
   }
