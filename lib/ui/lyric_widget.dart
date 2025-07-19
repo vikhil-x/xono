@@ -5,16 +5,50 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'lyric_widget_shimmer.dart';
 import '../tools/lyric_manager.dart';
 
-class LyricWidget extends ConsumerStatefulWidget {
-  final SongDetailed song;
-
-  const LyricWidget({super.key, required this.song});
+class LyricWidget extends ConsumerWidget {
+  const LyricWidget({super.key});
 
   @override
-  ConsumerState<LyricWidget> createState() => _LyricWidgetState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final songAsync = ref.watch(currentSongProvider);
+
+    return songAsync.maybeWhen(
+      data: (song) {
+        if (song == null) {
+          return const SizedBox.shrink();
+        }
+
+        final duration = ref.read(audioPlayerProvider).duration?.inSeconds.toString() ?? "";
+        final lyricsAsync = ref.watch(lyricsProvider((song,duration)));
+        final positionAsync = ref.watch(positionProvider);
+
+        return _LyricWidgetDisplay(
+          song: song,
+          lyricsAsync: lyricsAsync,
+          positionAsync: positionAsync,
+        );
+      },
+      orElse: () => const SizedBox.shrink(),
+    );
+  }
 }
 
-class _LyricWidgetState extends ConsumerState<LyricWidget> {
+class _LyricWidgetDisplay extends ConsumerStatefulWidget {
+  final SongDetailed song;
+  final AsyncValue<List<LyricLine>> lyricsAsync;
+  final AsyncValue<Duration> positionAsync;
+
+  const _LyricWidgetDisplay({
+    required this.song,
+    required this.lyricsAsync,
+    required this.positionAsync,
+  });
+
+  @override
+  ConsumerState<_LyricWidgetDisplay> createState() => _LyricWidgetDisplayState();
+}
+
+class _LyricWidgetDisplayState extends ConsumerState<_LyricWidgetDisplay> {
   final _scrollController = ScrollController();
   int _currentIndex = 0;
 
@@ -23,8 +57,8 @@ class _LyricWidgetState extends ConsumerState<LyricWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final lyricsAsync = ref.watch(lyricsProvider(widget.song));
-    final positionAsync = ref.watch(positionProvider);
+    final lyricsAsync = widget.lyricsAsync;
+    final positionAsync = widget.positionAsync;
 
     positionAsync.whenData((position) {
       _updateCurrentIndex(position, lyricsAsync.asData?.value ?? []);
@@ -32,7 +66,7 @@ class _LyricWidgetState extends ConsumerState<LyricWidget> {
 
     return lyricsAsync.when(
       loading: () => const LyricWidgetShimmer(),
-      error: (e, _) => Center(child: Text("Error loading lyrics")),
+      error: (e, _) => const Center(child: Text("Error loading lyrics")),
       data: (lyrics) {
         if (lyrics.isEmpty) {
           return const Center(
@@ -68,15 +102,15 @@ class _LyricWidgetState extends ConsumerState<LyricWidget> {
                     width: double.infinity,
                     child: line.text.isEmpty
                         ? Icon(
-                            Icons.music_note,
-                            color: isCurrent ? Colors.white : Colors.grey,
-                          )
+                      Icons.music_note,
+                      color: isCurrent ? Colors.white : Colors.grey,
+                    )
                         : Text(
-                            line.text,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
+                      line.text,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
                 ),
               );
@@ -105,9 +139,8 @@ class _LyricWidgetState extends ConsumerState<LyricWidget> {
       setState(() => _currentIndex = newIndex);
 
       final targetOffset =
-          (_currentIndex * _lineHeight) -
-          (_widgetHeight / 2) +
-          (_lineHeight / 2);
+          (_currentIndex * _lineHeight) - (_widgetHeight / 2) + (_lineHeight / 2);
+
       _scrollController.animateTo(
         targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
         duration: const Duration(milliseconds: 500),

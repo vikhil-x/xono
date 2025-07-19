@@ -57,8 +57,8 @@ final currentSongProvider = StreamProvider<SongDetailed?>((ref) {
 
 final playlistProvider = StateProvider<List<SongDetailed>>((ref) => []);
 
-final lyricsProvider = FutureProvider.family<List<LyricLine>, SongDetailed>((ref, song) async {
-  final duration = ref.read(audioPlayerProvider).duration?.inSeconds;
-  final raw = await getSyncedLyrics(song, duration?.toString() ?? "");
+final lyricsProvider = FutureProvider.family<List<LyricLine>, (SongDetailed, String)>((ref, params) async {
+  final (song, duration) = params;
+  final raw = await getSyncedLyrics(song, duration);
   return getLyricLines(raw);
 });

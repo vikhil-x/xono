@@ -10,8 +10,6 @@ class BottomNav extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final songAsync = ref.watch(currentSongProvider);
-
     return BottomNavigationBar(
       currentIndex: ref.watch(bottomIndexProvider),
       onTap: (index) {
@@ -29,10 +27,7 @@ class BottomNav extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        songAsync.maybeWhen(
-                          data: (song) => LyricWidget(song: song!),
-                          orElse: () => const SizedBox.shrink(),
-                        ),
+                        LyricWidget(),
                         const MusicPlayer(),
                       ],
                     ),
