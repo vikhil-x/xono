@@ -10,9 +10,10 @@ Future<String> getSyncedLyrics(SongDetailed song, String duration) async {
     final lyrics = decoded["syncedLyrics"];
     return lyrics as String;
   }
-  return getPlainLyrics(song, response);
+  return "";
 }
 
+/*
 Future<String> getPlainLyrics(SongDetailed song, http.Response response) async {
   if (response.statusCode == 200) {
     final decoded = jsonDecode(response.body);
@@ -21,6 +22,7 @@ Future<String> getPlainLyrics(SongDetailed song, http.Response response) async {
   }
   return "";
 }
+*/
 
 Future<http.Response> getResponse(SongDetailed song, String duration) async {
   final uri = Uri.https('lrclib.net', '/api/get', {
