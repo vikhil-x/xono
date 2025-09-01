@@ -18,8 +18,9 @@ class LyricWidget extends ConsumerWidget {
           return const SizedBox.shrink();
         }
 
-        final duration = ref.read(audioPlayerProvider).duration?.inSeconds.toString() ?? "";
-        final lyricsAsync = ref.watch(lyricsProvider((song,duration)));
+        final duration =
+            ref.read(audioPlayerProvider).duration?.inSeconds.toString() ?? "";
+        final lyricsAsync = ref.watch(lyricsProvider((song, duration)));
         final positionAsync = ref.watch(positionProvider);
 
         return _LyricWidgetDisplay(
@@ -45,7 +46,8 @@ class _LyricWidgetDisplay extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<_LyricWidgetDisplay> createState() => _LyricWidgetDisplayState();
+  ConsumerState<_LyricWidgetDisplay> createState() =>
+      _LyricWidgetDisplayState();
 }
 
 class _LyricWidgetDisplayState extends ConsumerState<_LyricWidgetDisplay> {
@@ -66,7 +68,14 @@ class _LyricWidgetDisplayState extends ConsumerState<_LyricWidgetDisplay> {
 
     return lyricsAsync.when(
       loading: () => const LyricWidgetShimmer(),
-      error: (e, _) => const Center(child: Text("Error loading lyrics")),
+      error: (e, _) => const Center(
+        child: Center(
+          child: Text(
+            'Error loading lyrics',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+      ),
       data: (lyrics) {
         if (lyrics.isEmpty) {
           return const Center(
@@ -102,15 +111,15 @@ class _LyricWidgetDisplayState extends ConsumerState<_LyricWidgetDisplay> {
                     width: double.infinity,
                     child: line.text.isEmpty
                         ? Icon(
-                      Icons.music_note,
-                      color: isCurrent ? Colors.white : Colors.grey,
-                    )
+                            Icons.music_note,
+                            color: isCurrent ? Colors.white : Colors.grey,
+                          )
                         : Text(
-                      line.text,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
+                            line.text,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
                   ),
                 ),
               );
@@ -139,7 +148,9 @@ class _LyricWidgetDisplayState extends ConsumerState<_LyricWidgetDisplay> {
       setState(() => _currentIndex = newIndex);
 
       final targetOffset =
-          (_currentIndex * _lineHeight) - (_widgetHeight / 2) + (_lineHeight / 2);
+          (_currentIndex * _lineHeight) -
+          (_widgetHeight / 2) +
+          (_lineHeight / 2);
 
       _scrollController.animateTo(
         targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
