@@ -2,6 +2,7 @@ import 'package:dart_ytmusic_api/dart_ytmusic_api.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers.dart';
+import 'yt_scrape.dart';
 
 class PlayerControl {
   final AudioPlayer player;
@@ -31,16 +32,20 @@ class PlayerControl {
       await player.setAudioSource(AudioSource.uri(url, tag: song));
       await player.play();
 
-      if(resetQueue ?? false){
-        ref.read(playlistProvider.notifier).state = [];
-        index = 0;
-        final relatedSongs = await scraper.getRelatedSongs(song);
-        ref.read(playlistProvider.notifier).state = [song,...relatedSongs];
-      }
+      if(resetQueue ?? false) await enqueueSongs(song: song, artist: false, scraper: scraper);
     }
     else{
       await player.play();
     }
+  }
+
+  Future<void> enqueueSongs({SongDetailed? song, required bool artist, Scraper? scraper}) async{
+    ref.read(playlistProvider.notifier).state = [];
+    song ??= await ref.watch(currentSongProvider.future);
+    scraper ??= await ref.read(ytScraperProvider.future);
+    index = 0;
+    final relatedSongs = await scraper!.getRelatedSongs(song!, artist);
+    ref.read(playlistProvider.notifier).state = [song,...relatedSongs];
   }
 
   void pause() async => await player.pause();

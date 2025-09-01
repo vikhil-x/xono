@@ -23,10 +23,19 @@ class Scraper {
     return searchResults;
   }
 
-  Future<List<SongDetailed>> getRelatedSongs(SongDetailed song) async {
-    final artistSongs = await ytMusic.getArtistSongs(song.artist.artistId ?? '');
-    artistSongs.removeWhere((s) => s.videoId == song.videoId);
-    return artistSongs.take(10).toList();
+  Future<List<SongDetailed>> getRelatedSongs(SongDetailed song, bool artist) async {
+    final List<SongDetailed> relatedSongs;
+
+    if(artist){
+      relatedSongs = await ytMusic.getArtistSongs(song.artist.artistId ?? '');
+    }
+    else{
+      final album = await ytMusic.getAlbum(song.album?.albumId ?? '');
+      relatedSongs = album.songs;
+      relatedSongs.removeWhere((s) => s.videoId == song.videoId);
+    }
+
+    return relatedSongs.take(10).toList();
   }
 
 
