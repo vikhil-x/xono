@@ -11,15 +11,15 @@ class QueuedSongsPage extends ConsumerStatefulWidget {
 }
 
 class _QueuedSongsPageState extends ConsumerState<QueuedSongsPage> {
-  Set<bool> queueType = {false};
 
   @override
   Widget build(BuildContext context) {
+    final queueType = ref.watch(queueTypeProvider);
     final currentSongAsync = ref.watch(currentSongProvider);
 
     void onSelectionChanged(Set<bool> selection) {
       setState(() {
-        queueType = selection;
+        ref.read(queueTypeProvider.notifier).state = selection.first;
       });
     }
 
@@ -30,7 +30,7 @@ class _QueuedSongsPageState extends ConsumerState<QueuedSongsPage> {
         }
 
         final playlistAsync = ref.watch(
-          playlistProvider((song, queueType.first)),
+          playlistProvider((song, queueType)),
         );
 
         return Padding(
@@ -51,7 +51,7 @@ class _QueuedSongsPageState extends ConsumerState<QueuedSongsPage> {
                     icon: Icon(Icons.album_sharp),
                   ),
                 ],
-                selected: queueType,
+                selected: {queueType},
                 onSelectionChanged: onSelectionChanged,
               ),
               Expanded(

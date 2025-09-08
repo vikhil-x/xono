@@ -67,3 +67,5 @@ final lyricsProvider = FutureProvider.family<List<LyricLine>, (SongDetailed, Str
   final raw = await getSyncedLyrics(song, duration);
   return getLyricLines(raw);
 });
+
+final queueTypeProvider = StateProvider<bool>((ref) => false);

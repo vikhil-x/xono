@@ -50,6 +50,7 @@ class SearchItemTile extends ConsumerWidget {
       ),
       onTap: () async {
         await ref.read(playerControlProvider).play(song, resetQueue);
+        ref.read(queueTypeProvider.notifier).state = false;
       },
     );
   }

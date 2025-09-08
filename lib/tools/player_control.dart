@@ -12,14 +12,16 @@ class PlayerControl {
   PlayerControl(this.ref) : player = ref.read(audioPlayerProvider);
 
   Future<void> playNext() async {
-    final playlist = await ref.read(playlistProvider((null, false)).future);
+    final queueType = ref.read(queueTypeProvider);
+    final playlist = await ref.read(playlistProvider((null, queueType)).future);
     if (playlist.isEmpty) return;
     index = (index + 1) % playlist.length;
     await play(playlist[index]);
   }
 
   Future<void> playPrev() async {
-    final playlist = await ref.read(playlistProvider((null, false)).future);
+    final queueType = ref.read(queueTypeProvider);
+    final playlist = await ref.read(playlistProvider((null, queueType)).future);
     if (playlist.isEmpty) return;
     index = (index - 1 + playlist.length) % playlist.length;
     await play(playlist[index]);
@@ -33,7 +35,8 @@ class PlayerControl {
       await player.play();
 
       if (resetQueue ?? false) {
-        await ref.refresh(playlistProvider((song, false)).future);
+        final queueType = ref.read(queueTypeProvider);
+        await ref.refresh(playlistProvider((song, queueType)).future);
         index = 0;
       }
     } else {
