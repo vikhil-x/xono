@@ -8,20 +8,21 @@ class PlayerControl {
   final AudioPlayer player;
   final Ref ref;
   int index = 0;
-  List<SongDetailed> currentPlaylist = [];
 
   PlayerControl(this.ref) : player = ref.read(audioPlayerProvider);
 
   Future<void> playNext() async {
-    if (currentPlaylist.isEmpty) return;
-    index = (index + 1) % currentPlaylist.length;
-    await play(currentPlaylist[index]);
+    final playlist = await ref.read(playlistProvider((null, false)).future);
+    if (playlist.isEmpty) return;
+    index = (index + 1) % playlist.length;
+    await play(playlist[index]);
   }
 
   Future<void> playPrev() async {
-    if (currentPlaylist.isEmpty) return;
-    index = (index - 1 + currentPlaylist.length) % currentPlaylist.length;
-    await play(currentPlaylist[index]);
+    final playlist = await ref.read(playlistProvider((null, false)).future);
+    if (playlist.isEmpty) return;
+    index = (index - 1 + playlist.length) % playlist.length;
+    await play(playlist[index]);
   }
 
   Future<void> play([SongDetailed? song, bool? resetQueue]) async {
@@ -32,9 +33,7 @@ class PlayerControl {
       await player.play();
 
       if (resetQueue ?? false) {
-        currentPlaylist = await ref.read(
-          playlistProvider((song, false)).future,
-        );
+        await ref.refresh(playlistProvider((song, false)).future);
         index = 0;
       }
     } else {
@@ -49,10 +48,9 @@ class PlayerControl {
   }) async {
     song ??= await ref.watch(currentSongProvider.future);
     scraper ??= await ref.read(ytScraperProvider.future);
-    index = 0;
+
     final relatedSongs = await scraper!.getRelatedSongs(song!, artist);
-    currentPlaylist = [song, ...relatedSongs];
-    return currentPlaylist;
+    return [song, ...relatedSongs];
   }
 
   Future<void> pause() async => await player.pause();
