@@ -55,7 +55,12 @@ final currentSongProvider = StreamProvider<SongDetailed?>((ref) {
   });
 });
 
-final playlistProvider = StateProvider<List<SongDetailed>>((ref) => []);
+final playlistProvider = FutureProvider.family<List<SongDetailed>, (SongDetailed?, bool)>((ref, params) async {
+  final (song, artist) = params;
+  final controller = ref.read(playerControlProvider);
+  final playList = await controller.enqueueSongs(song: song, artist: artist);
+  return playList;
+});
 
 final lyricsProvider = FutureProvider.family<List<LyricLine>, (SongDetailed, String)>((ref, params) async {
   final (song, duration) = params;

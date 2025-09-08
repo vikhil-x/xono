@@ -8,21 +8,20 @@ class PlayerControl {
   final AudioPlayer player;
   final Ref ref;
   int index = 0;
+  List<SongDetailed> currentPlaylist = [];
 
   PlayerControl(this.ref) : player = ref.read(audioPlayerProvider);
 
   Future<void> playNext() async {
-    final musicList = ref.read(playlistProvider);
-    if (musicList.isEmpty) return;
-    index = (index + 1) % musicList.length;
-    await play(musicList[index]);
+    if (currentPlaylist.isEmpty) return;
+    index = (index + 1) % currentPlaylist.length;
+    await play(currentPlaylist[index]);
   }
 
   Future<void> playPrev() async {
-    final musicList = ref.read(playlistProvider);
-    if (musicList.isEmpty) return;
-    index = (index - 1 + musicList.length) % musicList.length;
-    await play(musicList[index]);
+    if (currentPlaylist.isEmpty) return;
+    index = (index - 1 + currentPlaylist.length) % currentPlaylist.length;
+    await play(currentPlaylist[index]);
   }
 
   Future<void> play([SongDetailed? song, bool? resetQueue]) async {
@@ -32,21 +31,29 @@ class PlayerControl {
       await player.setAudioSource(AudioSource.uri(url, tag: song));
       await player.play();
 
-      if(resetQueue ?? false) await enqueueSongs(song: song, artist: false, scraper: scraper);
-    }
-    else{
+      if (resetQueue ?? false) {
+        currentPlaylist = await ref.read(
+          playlistProvider((song, false)).future,
+        );
+        index = 0;
+      }
+    } else {
       await player.play();
     }
   }
 
-  Future<void> enqueueSongs({SongDetailed? song, required bool artist, Scraper? scraper}) async{
-    ref.read(playlistProvider.notifier).state = [];
+  Future<List<SongDetailed>> enqueueSongs({
+    SongDetailed? song,
+    required bool artist,
+    Scraper? scraper,
+  }) async {
     song ??= await ref.watch(currentSongProvider.future);
     scraper ??= await ref.read(ytScraperProvider.future);
     index = 0;
     final relatedSongs = await scraper!.getRelatedSongs(song!, artist);
-    ref.read(playlistProvider.notifier).state = [song,...relatedSongs];
+    currentPlaylist = [song, ...relatedSongs];
+    return currentPlaylist;
   }
 
-  void pause() async => await player.pause();
+  Future<void> pause() async => await player.pause();
 }
