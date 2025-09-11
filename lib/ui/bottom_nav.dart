@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xono/ui/lyric_widget.dart';
+import 'package:xono/ui/lyric_widget_toggle.dart';
 import 'package:xono/ui/music_player.dart';
 import '../providers.dart';
 import 'dart:ui';
@@ -27,7 +27,7 @@ class BottomNav extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        LyricWidget(),
+                        const LyricWidgetToggle(),
                         const MusicPlayer(),
                       ],
                     ),
