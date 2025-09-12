@@ -49,6 +49,7 @@ class SearchItemTile extends ConsumerWidget {
         overflow: TextOverflow.ellipsis,
       ),
       onTap: () async {
+        FocusScope.of(context).unfocus();
         await ref.read(playerControlProvider).play(song, resetQueue);
         ref.read(queueTypeProvider.notifier).state = false;
       },
