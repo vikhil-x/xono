@@ -1,9 +1,9 @@
 import 'package:dart_ytmusic_api/types.dart';
 import 'package:flutter/material.dart';
-import '../providers.dart';
+import '../../../providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'lyric_widget_shimmer.dart';
-import '../tools/lyric_manager.dart';
+import '../../../tools/lyric_manager.dart';
 
 class LyricWidget extends ConsumerWidget {
   const LyricWidget({super.key});

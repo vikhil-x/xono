@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers.dart';
-import 'search_item.dart';
+import '../../providers.dart';
+import '../search/search_item.dart';
 
 class QueuedSongsPage extends ConsumerStatefulWidget {
   const QueuedSongsPage({super.key});

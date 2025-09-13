@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:xono/providers.dart';
-import 'package:xono/ui/queued_songs_page.dart';
-import '../tools/player_control.dart';
+import 'package:xono/ui/playback/queued_songs_page.dart';
+import '../../tools/player_control.dart';
 import 'package:just_audio/just_audio.dart';
 import 'music_player_shimmer.dart';
 import 'dart:async';

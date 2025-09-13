@@ -1,8 +1,8 @@
 import 'package:dart_ytmusic_api/dart_ytmusic_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xono/ui/visualizer.dart';
-import '../providers.dart';
+import 'package:xono/ui/search/visualizer.dart';
+import '../../providers.dart';
 import 'package:just_audio/just_audio.dart';
 
 export 'search_item_shimmer.dart';

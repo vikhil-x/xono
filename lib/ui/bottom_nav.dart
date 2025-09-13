@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:xono/ui/lyric_widget_toggle.dart';
-import 'package:xono/ui/music_player.dart';
+import 'package:xono/ui/playback/lyrics/lyric_widget_toggle.dart';
+import 'package:xono/ui/playback/music_player.dart';
 import '../providers.dart';
 import 'dart:ui';
 

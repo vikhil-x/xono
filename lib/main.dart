@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ui/bottom_nav.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'ui/search_page.dart';
+import 'ui/search/search_page.dart';
 
 void main() {
   runApp(ProviderScope(child: const XonoApp()));
